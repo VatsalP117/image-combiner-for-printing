@@ -1,12 +1,12 @@
-// Image Combiner App
+ 
 class ImageCombiner {
     constructor() {
-        // Page size presets in pixels (at 300 DPI)
+         
         this.pageSizes = {
-            'a4': { width: 2480, height: 3508 },        // 210 × 297 mm at 300 DPI
-            'letter': { width: 2550, height: 3300 },    // 8.5 × 11 in at 300 DPI
-            '4x6': { width: 1200, height: 1800 },       // 4 × 6 in at 300 DPI
-            '5x7': { width: 1500, height: 2100 },       // 5 × 7 in at 300 DPI
+            'a4': { width: 2480, height: 3508 },         
+            'letter': { width: 2550, height: 3300 },     
+            '4x6': { width: 1200, height: 1800 },        
+            '5x7': { width: 1500, height: 2100 },        
         };
 
         this.images = [];
@@ -17,7 +17,7 @@ class ImageCombiner {
     }
 
     initElements() {
-        // Settings
+         
         this.pagePresetSelect = document.getElementById('pagePreset');
         this.orientationSelect = document.getElementById('orientation');
         this.customWidthInput = document.getElementById('customWidth');
@@ -29,37 +29,37 @@ class ImageCombiner {
         this.paddingInput = document.getElementById('padding');
         this.bgColorInput = document.getElementById('bgColor');
 
-        // Upload
+         
         this.uploadArea = document.getElementById('uploadArea');
         this.fileInput = document.getElementById('fileInput');
 
-        // Images Section
+         
         this.imagesSection = document.getElementById('imagesSection');
         this.imagesGrid = document.getElementById('imagesGrid');
         this.imageCount = document.getElementById('imageCount');
         this.clearAllBtn = document.getElementById('clearAllBtn');
         this.generateBtn = document.getElementById('generateBtn');
 
-        // Pages Section
+         
         this.pagesSection = document.getElementById('pagesSection');
         this.pagesContainer = document.getElementById('pagesContainer');
         this.pageCount = document.getElementById('pageCount');
         this.downloadAllBtn = document.getElementById('downloadAllBtn');
 
-        // Canvas
+         
         this.canvas = document.getElementById('renderCanvas');
         this.ctx = this.canvas.getContext('2d');
     }
 
     initEventListeners() {
-        // Page preset change
+         
         this.pagePresetSelect.addEventListener('change', () => {
             const isCustom = this.pagePresetSelect.value === 'custom';
             this.customWidthGroup.style.display = isCustom ? 'flex' : 'none';
             this.customHeightGroup.style.display = isCustom ? 'flex' : 'none';
         });
 
-        // Upload area events
+         
         this.uploadArea.addEventListener('click', () => this.fileInput.click());
         this.uploadArea.addEventListener('dragover', (e) => {
             e.preventDefault();
@@ -74,13 +74,13 @@ class ImageCombiner {
             this.handleFiles(e.dataTransfer.files);
         });
 
-        // File input change
+         
         this.fileInput.addEventListener('change', (e) => {
             this.handleFiles(e.target.files);
-            e.target.value = ''; // Reset to allow same file selection
+            e.target.value = '';  
         });
 
-        // Buttons
+         
         this.clearAllBtn.addEventListener('click', () => this.clearAllImages());
         this.generateBtn.addEventListener('click', () => this.generatePages());
         this.downloadAllBtn.addEventListener('click', () => this.downloadAllPages());
@@ -95,7 +95,7 @@ class ImageCombiner {
 
         if (imageFiles.length === 0) return;
 
-        // Show loading state
+         
         const uploadContent = this.uploadArea.querySelector('.upload-content');
         const originalContent = uploadContent.innerHTML;
         uploadContent.innerHTML = `
@@ -106,22 +106,22 @@ class ImageCombiner {
 
         for (const file of imageFiles) {
             try {
-                // Check if it's a HEIC file (case-insensitive)
+                 
                 const ext = file.name.split('.').pop().toLowerCase();
                 const isHeic = ext === 'heic' || ext === 'heif' ||
                     file.type === 'image/heic' || file.type === 'image/heif' ||
-                    file.type === ''; // Sometimes HEIC files have empty MIME type
+                    file.type === '';  
 
                 if (isHeic) {
                     console.log(`Converting HEIC file: ${file.name}`);
                     try {
-                        // Convert HEIC to JPEG
+                         
                         const convertedBlob = await heic2any({
                             blob: file,
                             toType: 'image/jpeg',
                             quality: 0.92
                         });
-                        // heic2any may return array for multi-image HEIC
+                         
                         const blob = Array.isArray(convertedBlob) ? convertedBlob[0] : convertedBlob;
                         const newName = file.name.replace(/\.(heic|heif)$/i, '.jpg');
                         const convertedFile = new File([blob], newName, { type: 'image/jpeg' });
@@ -130,7 +130,7 @@ class ImageCombiner {
                     } catch (heicError) {
                         console.error(`HEIC conversion failed for ${file.name}:`, heicError);
 
-                        // Try to load it directly (Safari can handle HEIC natively)
+                         
                         try {
                             console.log(`Trying native load for: ${file.name}`);
                             await this.addImage(file);
@@ -147,7 +147,7 @@ class ImageCombiner {
             }
         }
 
-        // Restore upload area
+         
         uploadContent.innerHTML = originalContent;
         this.updateUI();
     }
@@ -186,13 +186,13 @@ class ImageCombiner {
     }
 
     updateUI() {
-        // Update image count
+         
         this.imageCount.textContent = this.images.length;
 
-        // Show/hide images section
+         
         this.imagesSection.style.display = this.images.length > 0 ? 'block' : 'none';
 
-        // Render image grid
+         
         this.imagesGrid.innerHTML = '';
         this.images.forEach(img => {
             const card = document.createElement('div');
@@ -208,7 +208,7 @@ class ImageCombiner {
             this.imagesGrid.appendChild(card);
         });
 
-        // Hide pages section if no pages
+         
         if (this.generatedPages.length === 0) {
             this.pagesSection.style.display = 'none';
         }
@@ -229,7 +229,7 @@ class ImageCombiner {
             height = size.height;
         }
 
-        // Swap for landscape
+         
         if (orientation === 'landscape') {
             [width, height] = [height, width];
         }
@@ -246,7 +246,7 @@ class ImageCombiner {
         this.generateBtn.innerHTML = '<span class="loading"></span> Generating...';
         this.generateBtn.disabled = true;
 
-        // Small delay to show loading state
+         
         await new Promise(resolve => setTimeout(resolve, 100));
 
         try {
@@ -258,21 +258,21 @@ class ImageCombiner {
             const bgColor = this.bgColorInput.value;
             const smartPack = document.getElementById('smartPack').checked;
 
-            // Calculate available space
+             
             const availableWidth = width - (padding * 2);
             const availableHeight = height - (padding * 2);
 
             if (smartPack) {
-                // TRUE SMART PACKING: Ignore grid, maximize images per page
+                 
                 this.generateSmartPackedPages(availableWidth, availableHeight, spacing, padding, width, height);
             } else {
-                // Grid-based packing (original behavior)
+                 
                 const imagesPerRow = parseInt(this.imagesPerRowInput.value) || 2;
                 const cellWidth = (availableWidth - (spacing * (imagesPerRow - 1))) / imagesPerRow;
                 this.generateGridPages(cellWidth, imagesPerRow, spacing, padding, width, height);
             }
 
-            // Render all pages
+             
             await this.renderPages(width, height, bgColor);
 
         } catch (error) {
@@ -284,9 +284,7 @@ class ImageCombiner {
         this.generateBtn.disabled = false;
     }
 
-    /**
-     * Grid-based page generation (when Smart Pack is OFF)
-     */
+     
     generateGridPages(cellWidth, imagesPerRow, spacing, padding, pageWidth, pageHeight) {
         let currentPage = [];
         let currentY = padding;
@@ -297,14 +295,14 @@ class ImageCombiner {
             const scale = cellWidth / img.width;
             const scaledHeight = img.height * scale;
 
-            // Check if we need a new row
+             
             if (currentRowImages.length >= imagesPerRow) {
                 currentY += currentRowHeight + spacing;
                 currentRowHeight = 0;
                 currentRowImages = [];
             }
 
-            // Check if we need a new page
+             
             if (currentY + scaledHeight > pageHeight - padding && currentPage.length > 0) {
                 this.generatedPages.push([...currentPage]);
                 currentPage = [];
@@ -330,16 +328,13 @@ class ImageCombiner {
         }
     }
 
-    /**
-     * TRUE Smart Pack: 2D Bin Packing to MINIMIZE pages
-     * Ignores images-per-row, dynamically fits as many images as possible
-     */
+     
     generateSmartPackedPages(availableWidth, availableHeight, spacing, padding, pageWidth, pageHeight) {
-        // Calculate target image height based on trying to fit ~4-6 images per page
-        // This is a heuristic that works well for most photo collections
-        const targetRowHeight = availableHeight / 4; // Aim for ~4 rows per page
+         
+         
+        const targetRowHeight = availableHeight / 4;  
 
-        // Prepare images with dimensions scaled to target row height
+         
         const preparedImages = this.images.map(img => {
             const aspectRatio = img.width / img.height;
             return {
@@ -349,7 +344,7 @@ class ImageCombiner {
             };
         });
 
-        // Sort by width (widest first) - helps with row packing
+         
         const sortedImages = [...preparedImages].sort((a, b) => b.displayWidth - a.displayWidth);
 
         const used = new Set();
@@ -357,12 +352,12 @@ class ImageCombiner {
         let currentY = padding;
 
         while (used.size < sortedImages.length) {
-            // Build a row: greedily pack images that fit in remaining width
+             
             const row = [];
             let rowWidth = 0;
             let rowHeight = 0;
 
-            // First pass: find images that fit in this row
+             
             for (const img of sortedImages) {
                 if (used.has(img.id)) continue;
 
@@ -376,7 +371,7 @@ class ImageCombiner {
                 }
             }
 
-            // If no images fit, force add the smallest remaining image
+             
             if (row.length === 0) {
                 for (const img of [...sortedImages].reverse()) {
                     if (!used.has(img.id)) {
@@ -389,19 +384,19 @@ class ImageCombiner {
                 }
             }
 
-            // Scale row to fit full width (maximize space usage)
+             
             const scaleFactor = availableWidth / rowWidth;
             const scaledRowHeight = rowHeight * scaleFactor;
 
-            // Check if row fits on current page
+             
             if (currentY + scaledRowHeight > pageHeight - padding && currentPage.length > 0) {
-                // Start new page
+                 
                 this.generatedPages.push([...currentPage]);
                 currentPage = [];
                 currentY = padding;
             }
 
-            // Place images in this row
+             
             let x = padding;
             for (const img of row) {
                 const scaledWidth = img.displayWidth * scaleFactor;
@@ -433,15 +428,15 @@ class ImageCombiner {
         for (let i = 0; i < this.generatedPages.length; i++) {
             const pageImages = this.generatedPages[i];
 
-            // Set canvas size
+             
             this.canvas.width = width;
             this.canvas.height = height;
 
-            // Draw background
+             
             this.ctx.fillStyle = bgColor;
             this.ctx.fillRect(0, 0, width, height);
 
-            // Draw images
+             
             for (const item of pageImages) {
                 this.ctx.drawImage(
                     item.img.element,
@@ -452,10 +447,10 @@ class ImageCombiner {
                 );
             }
 
-            // Convert to data URL
+             
             const dataUrl = this.canvas.toDataURL('image/png');
 
-            // Create page card
+             
             const pageCard = document.createElement('div');
             pageCard.className = `page-card ${orientation}`;
             pageCard.innerHTML = `
@@ -473,11 +468,11 @@ class ImageCombiner {
             this.pagesContainer.appendChild(pageCard);
         }
 
-        // Update page count and show section
+         
         this.pageCount.textContent = this.generatedPages.length;
         this.pagesSection.style.display = 'block';
 
-        // Scroll to pages section
+         
         this.pagesSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
 
@@ -495,15 +490,15 @@ class ImageCombiner {
         for (let i = 0; i < this.generatedPages.length; i++) {
             const pageImages = this.generatedPages[i];
 
-            // Set canvas size
+             
             this.canvas.width = width;
             this.canvas.height = height;
 
-            // Draw background
+             
             this.ctx.fillStyle = bgColor;
             this.ctx.fillRect(0, 0, width, height);
 
-            // Draw images
+             
             for (const item of pageImages) {
                 this.ctx.drawImage(
                     item.img.element,
@@ -514,17 +509,17 @@ class ImageCombiner {
                 );
             }
 
-            // Download
+             
             const dataUrl = this.canvas.toDataURL('image/png');
             this.downloadPage(dataUrl, i + 1);
 
-            // Small delay between downloads
+             
             await new Promise(resolve => setTimeout(resolve, 300));
         }
     }
 }
 
-// Initialize app
+ 
 document.addEventListener('DOMContentLoaded', () => {
     new ImageCombiner();
 });
