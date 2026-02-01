@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Combiner - Print Ready</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <div class="app-container">
+        <header class="header">
+            <h1>📸 Image Combiner</h1>
+            <p class="subtitle">Combine multiple photos onto printable pages</p>
+        </header>
+
+        <main class="main-content">
+            <!-- Settings Panel -->
+            <section class="settings-panel">
+                <h2>⚙️ Page Settings</h2>
+
+                <div class="settings-grid">
+                    <div class="setting-group">
+                        <label for="pagePreset">Page Size</label>
+                        <select id="pagePreset">
+                            <option value="a4">A4 (210 × 297 mm)</option>
+                            <option value="letter">Letter (8.5 × 11 in)</option>
+                            <option value="4x6">4 × 6 inches</option>
+                            <option value="5x7">5 × 7 inches</option>
+                            <option value="custom">Custom</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="orientation">Orientation</label>
+                        <select id="orientation">
+                            <option value="portrait">Portrait</option>
+                            <option value="landscape">Landscape</option>
+                        </select>
+                    </div>
+
+                    <div class="setting-group custom-size" id="customWidthGroup" style="display: none;">
+                        <label for="customWidth">Width (px)</label>
+                        <input type="number" id="customWidth" value="2480" min="100">
+                    </div>
+
+                    <div class="setting-group custom-size" id="customHeightGroup" style="display: none;">
+                        <label for="customHeight">Height (px)</label>
+                        <input type="number" id="customHeight" value="3508" min="100">
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="imagesPerRow">Images per Row</label>
+                        <input type="number" id="imagesPerRow" value="2" min="1" max="10">
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="spacing">Spacing (px)</label>
+                        <input type="number" id="spacing" value="20" min="0" max="100">
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="padding">Page Padding (px)</label>
+                        <input type="number" id="padding" value="40" min="0" max="200">
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="bgColor">Background Color</label>
+                        <input type="color" id="bgColor" value="#ffffff">
+                    </div>
+
+                    <div class="setting-group">
+                        <label for="smartPack">Smart Pack</label>
+                        <div class="toggle-wrapper">
+                            <input type="checkbox" id="smartPack" checked>
+                            <label for="smartPack" class="toggle-label">Minimize pages</label>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Upload Area -->
+            <section class="upload-section">
+                <div class="upload-area" id="uploadArea">
+                    <div class="upload-content">
+                        <span class="upload-icon">📁</span>
+                        <p>Drag & drop images here</p>
+                        <p class="upload-hint">or click to browse</p>
+                    </div>
+                    <input type="file" id="fileInput" multiple accept="image/*,.heic,.heif" hidden>
+                </div>
+            </section>
+
+            <!-- Image List -->
+            <section class="images-section" id="imagesSection" style="display: none;">
+                <div class="images-header">
+                    <h2>🖼️ Your Images (<span id="imageCount">0</span>)</h2>
+                    <div class="images-actions">
+                        <button class="btn btn-secondary" id="clearAllBtn">Clear All</button>
+                        <button class="btn btn-primary" id="generateBtn">Generate Pages</button>
+                    </div>
+                </div>
+                <div class="images-grid" id="imagesGrid"></div>
+            </section>
+
+            <!-- Generated Pages -->
+            <section class="pages-section" id="pagesSection" style="display: none;">
+                <div class="pages-header">
+                    <h2>📄 Generated Pages (<span id="pageCount">0</span>)</h2>
+                    <button class="btn btn-success" id="downloadAllBtn">⬇️ Download All</button>
+                </div>
+                <div class="pages-container" id="pagesContainer"></div>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Made for easy photo printing 🖨️</p>
+        </footer>
+    </div>
+
+    <!-- Hidden canvas for rendering -->
+    <canvas id="renderCanvas" style="display: none;"></canvas>
+
+    <!-- HEIC to JPEG converter -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/heic2any/0.0.4/heic2any.min.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
